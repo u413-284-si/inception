@@ -1,0 +1,7 @@
+#version: '2.27.0' optional
+
+services:
+  nginx:
+    build: requirements/nginx/.
+    ports:
+      - 80:80
