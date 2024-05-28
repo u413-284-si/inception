@@ -2,6 +2,7 @@
 services:
   nginx:
     build: requirements/nginx/.
+    image: nginx
     container_name: nginx
     depends_on:
       - wordpress
@@ -9,27 +10,36 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./web:/var/www/html
+      - wp-data:/var/www/html
     networks:
       - inception
 
   wordpress:
     build: requirements/wordpress/.
+    image: wordpress
     container_name: wp-php
     depends_on:
       - mariadb
     volumes:
-      - ./web:/var/www/html
+      - wp-data:/var/www/html
     networks:
       - inception
 
   mariadb:
     build: requirements/mariadb/.
+    image: mariadb
     container_name: mariadb
     volumes:
-      - ./database:/var/lib/mysql
+      - db-data:/var/lib/mysql
     networks:
       - inception
   
 networks:
   inception:
+
+# use the local filesystem on the host machine to store the volume's data
+volumes:
+  db-data:
+    driver: local
+  wp-data:
+    driver: local
