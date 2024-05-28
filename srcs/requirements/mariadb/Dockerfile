@@ -3,9 +3,9 @@ FROM debian:bookworm
 RUN apt update && apt upgrade && apt install -y \
 		mariadb-server
 
-COPY 50-server.cnf /etc/mysql/mariadb.conf.d/.
-COPY init.sql /etc/mysql/init.sql
-COPY script.sh .
+COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/.
+COPY conf/init.sql /etc/mysql/init.sql
+COPY tools/script.sh .
 
 RUN mkdir /run/mysqld
 
