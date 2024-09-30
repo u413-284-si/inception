@@ -1,0 +1,16 @@
+## Volumes
+
+# See all volumes managed by Docker
+docker volume ls
+
+# Get detailed information about a specific volume
+docker volume inspect <volume_name>
+
+# See what volumes are mounted in a specific container
+docker inspect <container_name>
+
+# Remove Unused Volumes
+docker volume prune
+
+# Remove a specific volume
+docker volume rm <volume_name>

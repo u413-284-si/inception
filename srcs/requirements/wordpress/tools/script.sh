@@ -7,4 +7,5 @@ chmod +x wp-cli.phar
 ./wp-cli.phar config create --dbname=wordpress --dbuser=wpuser --dbpass=password --dbhost=mariadb --allow-root
 ./wp-cli.phar core install --url=localhost --title=inception --admin_user=admin --admin_password=admin --admin_email=admin@admin.com --allow-root
 
+# Start php-fpm in foreground with -F
 php-fpm8.2 -F
