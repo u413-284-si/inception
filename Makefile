@@ -2,6 +2,13 @@
 DOCKER_COMPOSE_FILE = srcs/docker-compose.yml
 PROJECT_NAME = inception
 
+# Check verbosity
+ifeq ($(VERBOSE),1)
+	SILENT =
+else
+	SILENT = @
+endif
+
 # Colours
 RESET := \033[0m
 BOLD := \033[1m
@@ -10,6 +17,12 @@ GREEN := \033[32m
 YELLOW := \033[33m
 RED := \033[31m
 BLUE := \033[34m
+
+# Directories
+DIR_SECRETS = .secrets
+DIR_TOOLS = tools
+
+######### Targets #########
 
 # Default target: Show help
 .PHONY: help
@@ -31,48 +44,48 @@ help:
 
 # Start the services
 .PHONY: up
-up:
-	docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) up -d
+up: --secrets
+	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) up -d
 
 # Stop and remove the services
 .PHONY: down
 down:
-	docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) down
+	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) down
 
 # Build or rebuild the services
 .PHONY: build
 build:
-	docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) build
+	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) build
 
 # Start the services
 .PHONY: start
 start:
-	docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) start
+	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) start
 
 # Stop the services
 .PHONY: stop
 stop:
-	docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) stop
+	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) stop
 
 # View output from the services
 .PHONY: logs
 logs:
-	docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) logs
+	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) logs
 
 # List the services
 .PHONY: ps
 ps:
-	docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) ps
+	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) ps
 
 # Remove stopped containers, networks, and volumes
 .PHONY: clean
 clean:
-	docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) down -v --remove-orphans
+	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) down -v --remove-orphans
 
 # Restart the services
 .PHONY: restart
 restart:
-	docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) restart
+	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) restart
 
 # Execute a command in a running service container
 .PHONY: exec
@@ -80,3 +93,18 @@ exec:
 	@read -p "Service name: " service; \
 	read -p "Command: " cmd; \
 	docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) exec $$service $$cmd
+
+######### Private targets #########
+
+# Create secrets if there is no appropriate directory or the directory is empty
+.PHONY: --secrets
+--secrets:
+	@if [ ! -d $(DIR_SECRETS) ] || [ -z "$$(ls -A $(DIR_SECRETS))" ]; then \
+		echo "$(BOLD)$(BLUE)Creating secrets...$(RESET)"; \
+		mkdir -p $(DIR_SECRETS); \
+		cd $(DIR_SECRETS) && \
+		../$(DIR_TOOLS)/generate-ssl-certs.sh; \
+	else \
+		echo "$(BOLD)$(GREEN)Secrets already exist$(RESET)"; \
+	fi
+	
