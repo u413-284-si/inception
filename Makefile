@@ -42,27 +42,27 @@ help:
 	@echo "  exec     - Execute a command in a running service container"
 	@echo "  help     - Show this help message"
 
-# Start the services
+# Builds, (re)creates, starts, and attaches to containers for a service.
 .PHONY: up
 up: --secrets
 	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) up -d
 
-# Stop and remove the services
+# Stops containers and removes containers, networks, volumes, and images created by up
 .PHONY: down
 down:
 	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) down
 
-# Build or rebuild the services
+# Services are built once and then tagged
 .PHONY: build
 build:
 	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) build
 
-# Start the services
+# Starts existing containers for a service
 .PHONY: start
 start:
 	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) start
 
-# Stop the services
+# Stop the containers
 .PHONY: stop
 stop:
 	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) stop
