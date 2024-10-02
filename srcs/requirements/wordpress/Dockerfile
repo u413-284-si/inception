@@ -6,8 +6,8 @@ RUN apt update && apt upgrade && apt install -y \
 		curl
 
 COPY conf/www.conf /etc/php/8.2/fpm/pool.d/.
-COPY tools/script.sh .
+COPY tools/setup-wordpress.sh .
 
-RUN chmod +x script.sh
+RUN chmod +x setup-wordpress.sh
 
-CMD ["./script.sh"]
+CMD ["./setup-wordpress.sh"]
