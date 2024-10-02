@@ -14,8 +14,10 @@ openssl genrsa -out "root-ca.key" 4096
 
 # Step 2: Generate a CSR using the root key.
 openssl req \
-	-new -key "root-ca.key" \
-	-out "root-ca.csr" -sha256 \
+	-new \
+	-key "root-ca.key" \
+	-out "root-ca.csr" \
+	-sha256 \
 	-subj '/C=AT/ST=9/L=Vienna/O=42Vienna/CN=sqiu inception CA'
 
 # Step 3: Configure the root CA. Constrains the root CA to only sign leaf
@@ -27,18 +29,25 @@ keyUsage = critical, nonRepudiation, cRLSign, keyCertSign
 subjectKeyIdentifier=hash" > root-ca.cnf
 
 # Step 4: Sign the certificate.
-openssl x509 -req -days 3650 -in "root-ca.csr" \
-	-signkey "root-ca.key" -sha256 -out "root-ca.crt" \
-	-extfile "root-ca.cnf" -extensions \
-	root_ca
+openssl x509 \
+	-req \
+	-days 3650 \
+	-in "root-ca.csr" \
+	-signkey "root-ca.key" \
+	-sha256 \
+	-out "root-ca.crt" \
+	-extfile "root-ca.cnf" \
+	-extensions root_ca
 
 # Step 5: Generate the site key.
 openssl genrsa -out "site.key" 4096
 
 # Step 6: Generate a CSR using the site key.
 openssl req \
-	-new -key "site.key" \
-	-out "site.csr" -sha256 \
+	-new \
+	-key "site.key" \
+	-out "site.csr" \
+	-sha256 \
 	-subj '/C=AT/ST=9/L=Vienna/O=42Vienna/CN=sqiu.42.fr'
 
 # Step 7: Configure the site certificate.
@@ -54,6 +63,14 @@ subjectAltName = DNS:localhost, IP:127.0.0.1
 subjectKeyIdentifier=hash" > site.cnf
 
 # Step 8: Sign the site certificate.
-openssl x509 -req -days 750 -in "site.csr" -sha256 \
-	-CA "root-ca.crt" -CAkey "root-ca.key" -CAcreateserial \
-	-out "site.crt" -extfile "site.cnf" -extensions server
+openssl x509 \
+	-req \
+	-days 750 \
+	-in "site.csr" \
+	-sha256 \
+	-CA "root-ca.crt" \
+	-CAkey "root-ca.key" \
+	-CAcreateserial \
+	-out "site.crt" \
+	-extfile "site.cnf" \
+	-extensions server
