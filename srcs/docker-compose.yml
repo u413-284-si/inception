@@ -9,10 +9,8 @@ services:
       - wordpress
       - mariadb
     secrets:
-      - source: site_key
-        target: site.key
-      - source: site_cert
-        target: site.crt
+      - site_key
+      - site_cert
     ports:
       - 443:443
     volumes:

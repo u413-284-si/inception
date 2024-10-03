@@ -2,8 +2,8 @@
 
 # Create a Configuration Snippet Pointing to the SSL Key and Certificate
 touch /etc/nginx/snippets/self-signed.conf
-echo "ssl_certificate /run/secrets/site.crt;
-ssl_certificate_key /run/secrets/site.key;" > /etc/nginx/snippets/self-signed.conf
+echo "ssl_certificate /run/secrets/site_cert;
+ssl_certificate_key /run/secrets/site_key;" > /etc/nginx/snippets/self-signed.conf
 
 # Create a Configuration Snippet with Strong Encryption Settings
 touch /etc/nginx/snippets/ssl-params.conf
