@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Generate Diffie-Hellman (DH) parameters for SSL/TLS key exchange
+certtool --generate-dh-params --bits 4096 --outfile /etc/nginx/dhparam.pem
+
 # Create a Configuration Snippet Pointing to the SSL Key and Certificate
 touch /etc/nginx/snippets/self-signed.conf
 echo "ssl_certificate /run/secrets/site_cert;
@@ -9,6 +12,7 @@ ssl_certificate_key /run/secrets/site_key;" > /etc/nginx/snippets/self-signed.co
 touch /etc/nginx/snippets/ssl-params.conf
 echo "ssl_protocols TLSv1.3;
 ssl_prefer_server_ciphers on;
+ssl_dhparam /etc/nginx/dhparam.pem; 
 ssl_ciphers EECDH+AESGCM:EDH+AESGCM;
 ssl_ecdh_curve secp384r1;
 ssl_session_timeout  10m;

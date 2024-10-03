@@ -2,6 +2,7 @@ FROM debian:bookworm
 
 RUN apt update && apt upgrade && apt install -y \
 		nginx \
+		gnutls-bin \
 		ssl-cert
 
 COPY conf/default /etc/nginx/sites-available/.
