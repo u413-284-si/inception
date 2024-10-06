@@ -1,5 +1,9 @@
-## Volumes
+## General
+# See container resource usage
+docker stats
 
+
+## Volumes
 # See all volumes managed by Docker
 docker volume ls
 
@@ -14,3 +18,15 @@ docker volume prune
 
 # Remove a specific volume
 docker volume rm <volume_name>
+
+
+## Images
+# List all images
+docker image ls
+
+# Remove images with filter
+docker image prune --filter "until=24h"
+
+# Remove specific image
+docker rmi your_image_name:tag
+

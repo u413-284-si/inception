@@ -1,0 +1,9 @@
+# See authentication method for database users
+SELECT User, Host, plugin FROM mysql.user;
+
+# See grants for a user
+SHOW GRANTS FOR 'wpuser'@'%';
+SHOW GRANTS FOR 'root'@'localhost';
+
+# See all databases
+SHOW DATABASES;
