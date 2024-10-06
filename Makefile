@@ -103,7 +103,8 @@ exec:
 		echo "$(BOLD)$(BLUE)Creating secrets...$(RESET)"; \
 		mkdir -p $(DIR_SECRETS); \
 		cd $(DIR_SECRETS) && \
-		../$(DIR_TOOLS)/generate-ssl-certs.sh; \
+		../$(DIR_TOOLS)/generate-ssl-certs.sh && \
+		../$(DIR_TOOLS)/generate-pw.sh; \
 	else \
 		echo "$(BOLD)$(GREEN)Secrets already exist$(RESET)"; \
 	fi

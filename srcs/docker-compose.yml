@@ -43,10 +43,15 @@ services:
     image: mariadb
     container_name: mariadb
     init: true
+    secrets:
+      - db_root_password
+      - db_user_password
     deploy:
       restart_policy:
         condition: always
         window: 120s
+    env_file:
+      - .env_db
     volumes:
       - db-data:/var/lib/mysql
     networks:
@@ -67,3 +72,7 @@ secrets:
     file: ../.secrets/site.key
   site_cert:
     file: ../.secrets/site.crt
+  db_root_password:
+    file: ../.secrets/db_root_password
+  db_user_password:
+    file: ../.secrets/db_user_password
