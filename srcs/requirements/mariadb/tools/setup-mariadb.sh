@@ -1,6 +1,6 @@
 #!/bin/bash
-set -e
-set -o pipefail
+#set -e
+#set -o pipefail
 
 DATADIR="/var/lib/mysql"
 
@@ -28,6 +28,7 @@ if [ ! -w "$DATADIR/$WORDPRESS_DB_NAME" ]; then
 	log "Initializing MariaDB data directory..."
 	mariadb-install-db --datadir=$DATADIR --auth-root-authentication-method=normal --skip-test-db
 
+	# Start temporary MariaDB server without networking
 	log "Start temporary MariaDB server without networking"
 	mariadbd --skip-networking &
 	MARIADB_PID=$!
@@ -44,21 +45,42 @@ if [ ! -w "$DATADIR/$WORDPRESS_DB_NAME" ]; then
 		error "Unable to start MariaDB"
 	fi
 
-	log "Setting root password..."
-	MARIADB_ROOT_PASSWORD=$(cat /run/secrets/db_root_password)
-	mariadb -u root <<-EOF
-		ALTER USER 'root'@'localhost' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD';
-	EOF
-
+	# Create WordPress database and user
 	log "Create WordPress database and user"
-	WORDPRESS_DB_USER_PASSWORD=$(cat /run/secrets/db_user_password)
-	mariadb -u root <<-EOF
+	if ! mariadb -u root <<-EOF
 		CREATE DATABASE $WORDPRESS_DB_NAME;
+	EOF
+	then 
+		log "Failed to create WordPress database"
+	else
+		log "WordPress database created successfully"
+	fi
+
+	WORDPRESS_DB_USER_PASSWORD="$(cat /run/secrets/db_user_password)"
+	if ! mariadb -u root <<-EOF
 		CREATE USER '$WORDPRESS_DB_USER'@'%' IDENTIFIED BY '$WORDPRESS_DB_USER_PASSWORD';
 		GRANT ALL PRIVILEGES ON $WORDPRESS_DB_NAME.* TO '$WORDPRESS_DB_USER'@'%' WITH GRANT OPTION;
 		FLUSH PRIVILEGES;
 	EOF
+	then
+		log "Failed to create WordPress user"
+	else
+		log "WordPress user created successfully"
+	fi
 
+	# Set MariaDB root password
+	log "Setting root password..."
+	MARIADB_ROOT_PASSWORD="$(cat /run/secrets/db_root_password)"
+	if ! mariadb -u root <<-EOF
+		ALTER USER 'root'@'localhost' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD';
+	EOF
+	then
+		error "Failed to set MariaDB root password"
+	else
+		log "MariaDB root password set successfully"
+	fi
+
+	# Stop temporary MariaDB server
 	log "Stop temporary server"
 	kill "$MARIADB_PID"
 	wait "$MARIADB_PID"
