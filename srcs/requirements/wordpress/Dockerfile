@@ -10,4 +10,7 @@ COPY tools/setup-wordpress.sh .
 
 RUN chmod +x setup-wordpress.sh
 
-CMD ["./setup-wordpress.sh"]
+ENTRYPOINT [ "./setup-wordpress.sh" ]
+
+# Start php-fpm in foreground with -F flag
+CMD ["php-fpm8.2", "-F"]
