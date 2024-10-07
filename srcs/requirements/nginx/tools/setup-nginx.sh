@@ -1,7 +1,17 @@
 #!/bin/bash
 
+# Logging functions
+log() {
+    echo "[`date +'%Y-%m-%d %H:%M:%S'`] $1"
+}
+
+error() {
+    echo "[`date +'%Y-%m-%d %H:%M:%S'`] ERROR: $1" >&2
+    exit 1
+}
+
 # Generate Diffie-Hellman (DH) parameters for SSL/TLS key exchange
-certtool --generate-dh-params --bits 4096 --outfile /etc/nginx/dhparam.pem
+certtool --generate-dh-params --sec-param High --outfile /etc/nginx/dhparam.pem
 
 # Create a Configuration Snippet Pointing to the SSL Key and Certificate
 touch /etc/nginx/snippets/self-signed.conf
@@ -27,6 +37,7 @@ add_header X-Frame-Options DENY;
 add_header X-Content-Type-Options nosniff;
 add_header X-XSS-Protection \"1; mode=block\";" > /etc/nginx/snippets/ssl-params.conf
 
+log "Starting nginx"
 # Pass as a global directive ensuring it applies to the entire nginx process including spawned
 # worker processes. It is necessary when running Nginx inside a Docker
 # container because Docker expects the main process (in this case, Nginx)
