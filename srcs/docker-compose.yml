@@ -30,6 +30,7 @@ services:
     secrets:
       - db_user_password
       - wordpress_admin_password
+      - wordpress_user_password
     depends_on:
       - mariadb
     deploy:
@@ -83,3 +84,5 @@ secrets:
     file: ../.secrets/db_user_password
   wordpress_admin_password:
     file: ../.secrets/wordpress_admin_password
+  wordpress_user_password:
+    file: ../.secrets/wordpress_user_password
