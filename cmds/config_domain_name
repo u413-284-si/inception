@@ -1,0 +1,5 @@
+# Configure your domain name so it points to your local IP address
+
+hostname -I  --> note local ip
+
+sudo vim /etc/hosts --> add entry: <local ip> sqiu.42.fr
