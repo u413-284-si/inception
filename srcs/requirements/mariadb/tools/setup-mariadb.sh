@@ -1,22 +1,18 @@
 #!/bin/bash
-#set -e
-#set -o pipefail
+set -e
+set -o pipefail
 
 DATADIR="/var/lib/mysql"
 
 # Logging functions
 log() {
-    echo "[`date +'%Y-%m-%d %H:%M:%S'`] $1" >> /var/log/mariadb/mariadb.log
+    echo "[`date +'%Y-%m-%d %H:%M:%S'`] $1"
 }
 
 error() {
-    echo "[`date +'%Y-%m-%d %H:%M:%S'`] ERROR: $1" >&2 >> /var/log/mariadb/mariadb.error.log
+    echo "[`date +'%Y-%m-%d %H:%M:%S'`] ERROR: $1" >&2
     exit 1
 }
-
-mkdir -p /var/log/mariadb/
-chown -R $(whoami) /var/log/mariadb/
-chmod -R 755 /var/log/mariadb/
 
 # Ensure the user running this script has permissions to write to the data directory
 if [ ! -w "$DATADIR" ]; then
@@ -51,7 +47,7 @@ if [ ! -w "$DATADIR/$WORDPRESS_DB_NAME" ]; then
 		CREATE DATABASE $WORDPRESS_DB_NAME;
 	EOF
 	then 
-		log "Failed to create WordPress database"
+		error "Failed to create WordPress database"
 	else
 		log "WordPress database created successfully"
 	fi
@@ -63,7 +59,7 @@ if [ ! -w "$DATADIR/$WORDPRESS_DB_NAME" ]; then
 		FLUSH PRIVILEGES;
 	EOF
 	then
-		log "Failed to create WordPress user"
+		error "Failed to create WordPress user"
 	else
 		log "WordPress user created successfully"
 	fi
