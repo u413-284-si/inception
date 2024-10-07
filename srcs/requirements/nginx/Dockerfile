@@ -9,6 +9,7 @@ COPY conf/default /etc/nginx/sites-available/.
 COPY conf/nginx.conf /etc/nginx/.
 COPY tools/setup-nginx.sh .
 
-RUN chmod +x setup-nginx.sh
+RUN chmod +x setup-nginx.sh \
+	&& mv setup-nginx.sh /usr/local/bin/
 
-CMD ["./setup-nginx.sh"]
+ENTRYPOINT [ "setup-nginx.sh" ]
