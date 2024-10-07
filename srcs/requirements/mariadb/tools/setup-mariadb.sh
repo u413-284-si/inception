@@ -52,9 +52,9 @@ if [ ! -w "$DATADIR/$WORDPRESS_DB_NAME" ]; then
 		log "WordPress database created successfully"
 	fi
 
-	WORDPRESS_DB_USER_PASSWORD="$(cat /run/secrets/db_user_password)"
+	WORDPRESS_USER_PASSWORD="$(cat $WORDPRESS_DB_USER_PASSWORD)"
 	if ! mariadb -u root <<-EOF
-		CREATE USER '$WORDPRESS_DB_USER'@'%' IDENTIFIED BY '$WORDPRESS_DB_USER_PASSWORD';
+		CREATE USER '$WORDPRESS_DB_USER'@'%' IDENTIFIED BY '$WORDPRESS_USER_PASSWORD';
 		GRANT ALL PRIVILEGES ON $WORDPRESS_DB_NAME.* TO '$WORDPRESS_DB_USER'@'%' WITH GRANT OPTION;
 		FLUSH PRIVILEGES;
 	EOF
@@ -66,9 +66,9 @@ if [ ! -w "$DATADIR/$WORDPRESS_DB_NAME" ]; then
 
 	# Set MariaDB root password
 	log "Setting root password..."
-	MARIADB_ROOT_PASSWORD="$(cat /run/secrets/db_root_password)"
+	ROOT_PASSWORD="$(cat $MARIADB_ROOT_PASSWORD)"
 	if ! mariadb -u root <<-EOF
-		ALTER USER 'root'@'localhost' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD';
+		ALTER USER 'root'@'localhost' IDENTIFIED BY '$ROOT_PASSWORD';
 	EOF
 	then
 		error "Failed to set MariaDB root password"

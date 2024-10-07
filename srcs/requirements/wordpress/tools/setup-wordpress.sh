@@ -20,33 +20,33 @@ if [ ! -e index.php ] && [ ! -e wp-includes/version.php ]; then
 	wp core download --allow-root
 
 	log "Create wp-config.php"
-	WORDPRESS_DB_USER_PASSWORD="$(cat /run/secrets/db_user_password)"
+	DB_USER_PASSWORD="$(cat $WORDPRESS_DB_USER_PASSWORD)"
 	if ! wp config create \
 			--dbname=$WORDPRESS_DB_NAME \
 			--dbuser=$WORDPRESS_DB_USER \
-			--dbpass="$WORDPRESS_DB_USER_PASSWORD" \
+			--dbpass="$DB_USER_PASSWORD" \
 			--dbhost=$MARIADB_HOST \
 			--allow-root; then
 		error "Failed to create wp-config.php with the wp-cli."
 	fi
 
 	log "Install WordPress"
-	WORDPRESS_ADMIN_PASSWORD="$(cat /run/secrets/wordpress_admin_password)"
+	ADMIN_PASSWORD="$(cat $WORDPRESS_ADMIN_PASSWORD)"
 	if ! wp core install \
 			--url=$DOMAIN \
 			--title=$TITLE \
 			--admin_user=$WORDPRESS_ADMIN \
-			--admin_password="$WORDPRESS_ADMIN_PASSWORD" \
+			--admin_password="$ADMIN_PASSWORD" \
 			--admin_email="$WORDPRESS_ADMIN_MAIL" \
 			--allow-root; then
 		error "Failed to install wordpress with the wp-cli."
 	fi
 
 	log "Create WordPress user"
-	WORDPRESS_USER_PASSWORD="$(cat /run/secrets/wordpress_user_password)"
+	USER_PASSWORD="$(cat $WORDPRESS_USER_PASSWORD)"
 	if ! wp user create $WORDPRESS_USER "$WORDPRESS_USER_MAIL" \
 			--role=author \
-			--user_pass="$WORDPRESS_USER_PASSWORD" \
+			--user_pass="$USER_PASSWORD" \
 			--allow-root; then
 		error "Failed to create wordpress user"
 	fi
