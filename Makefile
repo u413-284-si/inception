@@ -19,7 +19,7 @@ RED := \033[31m
 BLUE := \033[34m
 
 # Directories
-DIR_SECRETS = .secrets
+DIR_SECRETS = secrets
 DIR_TOOLS = tools
 
 ######### Targets #########

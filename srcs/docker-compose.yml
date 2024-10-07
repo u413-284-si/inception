@@ -75,14 +75,14 @@ volumes:
 
 secrets:
   site_key:
-    file: ../.secrets/site.key
+    file: ../secrets/site.key
   site_cert:
-    file: ../.secrets/site.crt
+    file: ../secrets/site.crt
   db_root_password:
-    file: ../.secrets/db_root_password
+    file: ../secrets/db_root_password
   db_user_password:
-    file: ../.secrets/db_user_password
+    file: ../secrets/db_user_password
   wordpress_admin_password:
-    file: ../.secrets/wordpress_admin_password
+    file: ../secrets/wordpress_admin_password
   wordpress_user_password:
-    file: ../.secrets/wordpress_user_password
+    file: ../secrets/wordpress_user_password
