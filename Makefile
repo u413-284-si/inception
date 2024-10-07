@@ -20,7 +20,7 @@ BLUE := \033[34m
 
 # Directories
 DIR_SECRETS = secrets
-DIR_TOOLS = tools
+DIR_TOOLS = srcs/requirements/tools
 
 ######### Targets #########
 
