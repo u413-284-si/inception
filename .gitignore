@@ -1,2 +1,5 @@
 # credentials, passwords
 secrets/
+
+# database
+db-data/
