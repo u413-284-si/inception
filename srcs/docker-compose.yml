@@ -5,6 +5,8 @@ services:
     image: nginx
     container_name: nginx
     init: true
+    security_opt:
+      - no-new-privileges:true
     depends_on:
       - wordpress
       - mariadb
@@ -27,6 +29,8 @@ services:
     image: wordpress
     container_name: wp-php
     init: true
+    security_opt:
+      - no-new-privileges:true
     secrets:
       - db_user_password
       - wordpress_admin_password
@@ -49,6 +53,8 @@ services:
     image: mariadb
     container_name: mariadb
     init: true
+    security_opt:
+      - no-new-privileges:true
     secrets:
       - db_root_password
       - db_user_password
