@@ -52,7 +52,7 @@ if [ ! -e index.php ] && [ ! -e wp-includes/version.php ]; then
 	fi
 else
 	log "Wordpress is already setup."
-	wp core verify-checksums
+	wp core verify-checksums --allow-root
 fi
 
 exec $@
