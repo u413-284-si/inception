@@ -20,7 +20,7 @@ if [ ! -w "$DATADIR" ]; then
 fi
 
 # Initialize MariaDB data directory if it's not already initialized
-if [ ! -w "$DATADIR/$WORDPRESS_DB_NAME" ]; then
+if [ ! -d "$DATADIR/$WORDPRESS_DB_NAME" ]; then
 	log "Initializing MariaDB data directory..."
 	mariadb-install-db --datadir=$DATADIR --auth-root-authentication-method=normal --skip-test-db
 
@@ -40,6 +40,14 @@ if [ ! -w "$DATADIR/$WORDPRESS_DB_NAME" ]; then
 	if [ "$i" = 0 ]; then
 		error "Unable to start MariaDB"
 	fi
+
+	# Create mysqluser
+	log "Create mysqluser"
+	mariadb -u root <<-EOF
+		CREATE USER 'mysqluser'@'localhost' IDENTIFIED VIA unix_socket;
+		GRANT ALL PRIVILEGES ON *.* TO 'mysqluser'@'localhost' WITH GRANT OPTION;
+		FLUSH PRIVILEGES;
+	EOF
 
 	# Create WordPress database and user
 	log "Create WordPress database and user"
