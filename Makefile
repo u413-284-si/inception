@@ -45,7 +45,7 @@ help:
 # Builds, (re)creates, starts, and attaches to containers for a service.
 .PHONY: up
 up: --secrets
-	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) up --force-recreate -d
+	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) up -d
 
 # Stops containers and removes containers, networks, volumes, and images created by up
 .PHONY: down
@@ -55,7 +55,7 @@ down:
 # Services are built once and then tagged
 .PHONY: build
 build:
-	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) build --no-cache
+	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) build
 
 # Starts existing containers for a service
 .PHONY: start
