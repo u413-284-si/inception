@@ -3,3 +3,6 @@ secrets/
 
 # database
 db-data/
+
+# website
+wp-data/

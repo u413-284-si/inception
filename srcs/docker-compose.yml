@@ -20,7 +20,7 @@ services:
         condition: always
         window: 120s
     volumes:
-      - wp-data:/var/www/html
+      - ./wp-data:/var/www/html
     networks:
       - inception
 
@@ -44,7 +44,7 @@ services:
     env_file:
       - ./.env
     volumes:
-      - wp-data:/var/www/html
+      - ./wp-data:/var/www/html
     networks:
       - inception
 
@@ -68,6 +68,7 @@ services:
       - ./db-data:/var/lib/mysql
     networks:
       - inception
+
   redis:
     build: requirements/bonus/redis/.
     image: redis
@@ -82,7 +83,7 @@ services:
         condition: always
         window: 120s
     volumes:
-      - wp-data:/var/www/html
+      - ./wp-data:/var/www/html
     networks:
       - inception
 

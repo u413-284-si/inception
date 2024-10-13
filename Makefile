@@ -21,6 +21,8 @@ BLUE := \033[34m
 # Directories
 DIR_SECRETS = secrets
 DIR_TOOLS = srcs/requirements/tools
+DIR_DB_DATA = srcs/db-data
+DIR_WP_DATA = srcs/wp-data
 
 ######### Targets #########
 
@@ -44,7 +46,7 @@ help:
 
 # Builds, (re)creates, starts, and attaches to containers for a service.
 .PHONY: up
-up: --secrets
+up: --secrets --volumes
 	$(SILENT)docker compose -f $(DOCKER_COMPOSE_FILE) -p $(PROJECT_NAME) up -d
 
 # Stops containers and removes containers, networks, volumes, and images created by up
@@ -108,4 +110,13 @@ exec:
 	else \
 		echo "$(BOLD)$(GREEN)Secrets already exist$(RESET)"; \
 	fi
-	
+
+# Create local volume directories
+.PHONY: --volumes
+--volumes:
+	@if [ ! -d $(DIR_DB_DATA) ] || [ ! -d $(DIR_WP_DATA) ]; then \
+		mkdir -p $(DIR_DB_DATA); \
+		mkdir -p $(DIR_WP_DATA); \
+	else \
+		echo "$(BOLD)$(GREEN)Volumes already exist$(RESET)"; \
+	fi
