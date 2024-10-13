@@ -1,1 +1,3 @@
 wp user list --allow-root
+
+wp redis status
