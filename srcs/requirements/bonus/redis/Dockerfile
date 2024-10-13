@@ -9,7 +9,6 @@ RUN apt update && apt upgrade && apt install -y \
 		redis
 
 COPY conf/redis.conf /etc/redis/.
-COPY conf/sysctl.conf /etc/.
 COPY ./tools/setup-redis.sh .
 
 RUN chmod +x setup-redis.sh \
