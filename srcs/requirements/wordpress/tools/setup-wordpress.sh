@@ -30,6 +30,21 @@ if [ ! -e index.php ] && [ ! -e wp-includes/version.php ]; then
 		error "Failed to create wp-config.php with the wp-cli."
 	fi
 
+	log "Enable redis cache"
+	wp plugin install redis-cache --activate --allow-root
+	# Redis Host, Port, and other basic settings
+	wp config set WP_REDIS_HOST redis --allow-root
+	wp config set WP_REDIS_PORT 6379 --allow-root
+	wp config set WP_REDIS_PREFIX 'redis' --allow-root
+	wp config set WP_REDIS_DATABASE 0 --allow-root
+	wp config set WP_REDIS_TIMEOUT 1 --allow-root
+	wp config set WP_REDIS_READ_TIMEOUT 1 --allow-root
+	# Additional Redis settings
+	wp config set WP_CACHE_KEY_SALT 'sqiu42' --allow-root
+	wp config set WP_REDIS_MAXTTL 86400 --allow-root
+	wp config set WP_REDIS_COMPRESSION true --allow-root
+	wp redis enable --allow-root
+
 	log "Install WordPress"
 	ADMIN_PASSWORD="$(cat $WORDPRESS_ADMIN_PASSWORD)"
 	if ! wp core install \

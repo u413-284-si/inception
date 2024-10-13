@@ -68,7 +68,24 @@ services:
       - ./db-data:/var/lib/mysql
     networks:
       - inception
-  
+  redis:
+    build: requirements/bonus/redis/.
+    image: redis
+    container_name: redis
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      - wordpress
+    deploy:
+      restart_policy:
+        condition: always
+        window: 120s
+    volumes:
+      - wp-data:/var/www/html
+    networks:
+      - inception
+
 networks:
   inception:
 
