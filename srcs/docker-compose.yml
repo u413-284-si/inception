@@ -37,6 +37,7 @@ services:
       - wordpress_user_password
     depends_on:
       - mariadb
+      - redis
     deploy:
       restart_policy:
         condition: always
@@ -76,8 +77,6 @@ services:
     init: true
     security_opt:
       - no-new-privileges:true
-    depends_on:
-      - wordpress
     deploy:
       restart_policy:
         condition: always

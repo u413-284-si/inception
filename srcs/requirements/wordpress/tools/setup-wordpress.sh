@@ -12,7 +12,7 @@ error() {
     exit 1
 }
 
-# Check if wordpress is already installed
+# Check if wordpress is already downloaded
 # Missing index.php: The site won't load.
 # Missing wp-includes/version.php: The WordPress core is likely incomplete or broken.
 if [ ! -e index.php ] && [ ! -e wp-includes/version.php ]; then
@@ -29,7 +29,40 @@ if [ ! -e index.php ] && [ ! -e wp-includes/version.php ]; then
 			--allow-root; then
 		error "Failed to create wp-config.php with the wp-cli."
 	fi
+else
+    log "WordPress core files already exist."
+fi
 
+if ! wp core is-installed --allow-root; then
+	log "Install WordPress"
+	ADMIN_PASSWORD="$(cat $WORDPRESS_ADMIN_PASSWORD)"
+	if ! wp core install \
+			--url=$DOMAIN \
+			--title=$TITLE \
+			--admin_user=$WORDPRESS_ADMIN \
+			--admin_password="$ADMIN_PASSWORD" \
+			--admin_email="$WORDPRESS_ADMIN_MAIL" \
+			--allow-root; then
+		error "Failed to install wordpress with the wp-cli."
+	fi
+else
+    log "WordPress is already installed."
+fi
+
+if ! wp user list --field=user_login --allow-root | grep -q "^$WORDPRESS_USER$"; then
+	log "Create WordPress user"
+	USER_PASSWORD="$(cat $WORDPRESS_USER_PASSWORD)"
+	if ! wp user create $WORDPRESS_USER "$WORDPRESS_USER_MAIL" \
+			--role=author \
+			--user_pass="$USER_PASSWORD" \
+			--allow-root; then
+		error "Failed to create wordpress user"
+	fi
+else
+    log "WordPress user already exists."
+fi
+
+if ! wp plugin is-installed redis-cache --allow-root; then
 	log "Enable redis cache"
 	wp plugin install redis-cache --activate --allow-root
 	# Redis Host, Port, and other basic settings
@@ -44,30 +77,10 @@ if [ ! -e index.php ] && [ ! -e wp-includes/version.php ]; then
 	wp config set WP_REDIS_MAXTTL 86400 --allow-root
 	wp config set WP_REDIS_COMPRESSION true --allow-root
 	wp redis enable --allow-root
-
-	log "Install WordPress"
-	ADMIN_PASSWORD="$(cat $WORDPRESS_ADMIN_PASSWORD)"
-	if ! wp core install \
-			--url=$DOMAIN \
-			--title=$TITLE \
-			--admin_user=$WORDPRESS_ADMIN \
-			--admin_password="$ADMIN_PASSWORD" \
-			--admin_email="$WORDPRESS_ADMIN_MAIL" \
-			--allow-root; then
-		error "Failed to install wordpress with the wp-cli."
-	fi
-
-	log "Create WordPress user"
-	USER_PASSWORD="$(cat $WORDPRESS_USER_PASSWORD)"
-	if ! wp user create $WORDPRESS_USER "$WORDPRESS_USER_MAIL" \
-			--role=author \
-			--user_pass="$USER_PASSWORD" \
-			--allow-root; then
-		error "Failed to create wordpress user"
-	fi
 else
-	log "Wordpress is already setup."
-	wp core verify-checksums --allow-root
+    log "Redis cache is already enabled."
 fi
+
+wp core verify-checksums --allow-root
 
 exec $@
