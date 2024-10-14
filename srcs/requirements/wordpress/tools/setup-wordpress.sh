@@ -76,6 +76,9 @@ if ! wp plugin is-installed redis-cache --allow-root; then
 	wp config set WP_CACHE_KEY_SALT 'sqiu42' --allow-root
 	wp config set WP_REDIS_MAXTTL 86400 --allow-root
 	wp config set WP_REDIS_COMPRESSION true --allow-root
+    REDIS_PASSWORD="$(cat $REDIS_USER_PASSWORD)"
+    wp config set WP_REDIS_PASSWORD $REDIS_PASSWORD --allow-root
+    wp config set WP_CACHE true --allow-root
 else
     log "Redis cache is already installed."
 fi

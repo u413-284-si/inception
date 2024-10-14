@@ -35,6 +35,7 @@ services:
       - db_user_password
       - wordpress_admin_password
       - wordpress_user_password
+      - redis_user_password
     depends_on:
       - mariadb
       - redis
@@ -77,6 +78,8 @@ services:
     init: true
     security_opt:
       - no-new-privileges:true
+    secrets:
+      - redis_user_password
     deploy:
       restart_policy:
         condition: always
@@ -109,3 +112,5 @@ secrets:
     file: ../secrets/wordpress_admin_password
   wordpress_user_password:
     file: ../secrets/wordpress_user_password
+  redis_user_password:
+    file: ../secrets/redis_user_password
