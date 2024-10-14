@@ -12,6 +12,6 @@ error() {
     exit 1
 }
 
-log "Starting Redis server"
 REDIS_PASSWORD="$(cat $REDIS_USER_PASSWORD)"
-redis-server --requirepass $REDIS_PASSWORD /etc/redis/redis.conf
+log "Starting Redis server"
+redis-server --requirepass $REDIS_PASSWORD
