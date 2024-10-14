@@ -8,7 +8,7 @@ RUN groupadd -r -g $GID nginx && useradd -r -g nginx -u $UID nginxuser
 RUN apt update && apt upgrade && apt install -y \
 		nginx \
 		gnutls-bin \
-		ssl-cert
+		openssl
 
 RUN mkdir -p /var/www/html/ /etc/nginx/ /var/cache/nginx /var/log/nginx /var/lib/nginx \
 		&& chown -R nginxuser:nginx /var/www/html/ /etc/nginx/ /var/cache/nginx /var/log/nginx /var/lib/nginx \

@@ -18,7 +18,7 @@ openssl req \
 	-key "root-ca.key" \
 	-out "root-ca.csr" \
 	-sha256 \
-	-subj '/C=AT/ST=9/L=Vienna/O=42Vienna/CN=sqiu inception CA'
+	-subj '/C=AT/ST=9/L=Vienna/O=42Vienna/CN=QiuIndustriesCA'
 
 # Step 3: Configure the root CA. Constrains the root CA to only sign leaf
 # certificates and not intermediate CAs.
@@ -48,7 +48,7 @@ openssl req \
 	-key "site.key" \
 	-out "site.csr" \
 	-sha256 \
-	-subj '/C=AT/ST=9/L=Vienna/O=42Vienna/CN=sqiu.42.fr'
+	-subj '/C=AT/ST=9/L=Vienna/O=42Vienna/CN=QiuIndustriesCA'
 
 # Step 7: Configure the site certificate.
 # This constrains the site certificate so that it can only be used to
