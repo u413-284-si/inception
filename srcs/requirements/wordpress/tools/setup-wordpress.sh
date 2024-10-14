@@ -63,7 +63,7 @@ else
 fi
 
 if ! wp plugin is-installed redis-cache --allow-root; then
-	log "Enable redis cache"
+	log "Installing redis cache"
 	wp plugin install redis-cache --activate --allow-root
 	# Redis Host, Port, and other basic settings
 	wp config set WP_REDIS_HOST redis --allow-root
@@ -76,7 +76,13 @@ if ! wp plugin is-installed redis-cache --allow-root; then
 	wp config set WP_CACHE_KEY_SALT 'sqiu42' --allow-root
 	wp config set WP_REDIS_MAXTTL 86400 --allow-root
 	wp config set WP_REDIS_COMPRESSION true --allow-root
-	wp redis enable --allow-root
+else
+    log "Redis cache is already installed."
+fi
+
+if ! wp redis status --allow-root | grep -q "Connected"; then
+    log "Enabling redis cache"
+    wp redis enable --allow-root
 else
     log "Redis cache is already enabled."
 fi
