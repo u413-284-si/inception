@@ -47,22 +47,35 @@ server {
 
 	server_name sqiu.42.fr;
 
-	location / {
-		# First attempt to serve request as file, then
-		# as directory, then fall back to displaying a 404.
-		try_files $uri $uri/ =404;
-	}
+    # Handle the main site
+    location / {
+        try_files $uri $uri/ =404;
 
-	#pass PHP scripts to FastCGI server
-	
-	location ~ \.php$ {
-		include snippets/fastcgi-php.conf;
-	
-		# With php-fpm (or other unix sockets):
-		# fastcgi_pass unix:/run/php/php7.4-fpm.sock;
-		# With php-cgi (or other tcp sockets):
-		fastcgi_pass wp-php:9000;
-	}
+    }
+
+    # Pass PHP scripts to the FastCGI server
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass wp-php:9000;
+    }
+
+    # Handle Adminer
+    location /adminer {
+        # Pass all requests to index.php within /adminer/
+         try_files $uri $uri/ /adminer/index.php?$args;
+    }
+
+    # PHP processing for the Adminer PHP files
+    location ~ ^/adminer/.*\.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass adminer:9000;  # Link to the Adminer PHP-FPM container
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $uri;  # Send the request path to PHP-FPM
+    }
+
+
+    # Disable directory listing for security
+    autoindex off;
 
 	# deny access to .htaccess files, if Apache's document root
 	# concurs with nginx's one

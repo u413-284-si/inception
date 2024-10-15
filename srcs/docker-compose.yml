@@ -91,6 +91,26 @@ services:
     networks:
       - inception
 
+  adminer:
+    build: requirements/bonus/adminer/.
+    image: adminer
+    container_name: adminer
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      - mariadb
+    deploy:
+      restart_policy:
+        condition: always
+        window: 120s
+    env_file:
+      - ./.env
+    volumes:
+      - ./wp-data:/var/www/html
+    networks:
+      - inception
+
 networks:
   inception:
 
