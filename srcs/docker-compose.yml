@@ -111,6 +111,35 @@ services:
     networks:
       - inception
 
+  ftp:
+    build:
+      context: requirements/bonus/ftp/.
+      args:
+        FTP_USER: ${FTP_USER}
+    image: ftp
+    container_name: ftp
+    init: true
+    depends_on:
+      - wordpress
+    security_opt:
+      - no-new-privileges:true
+    secrets:
+      - ftp_user_password
+    deploy:
+      restart_policy:
+        condition: always
+        window: 120s
+    env_file:
+      - ./.env
+    ports:
+       - "21:21"
+       - "20:20"
+       - "40000-40005:40000-40005"
+    volumes:
+      - ./wp-data:/home/slim/ftp/files
+    networks:
+      - inception
+
 networks:
   inception:
 
@@ -136,3 +165,5 @@ secrets:
     file: ../secrets/wordpress_user_password
   redis_user_password:
     file: ../secrets/redis_user_password
+  ftp_user_password:
+    file: ../secrets/ftp_user_password
