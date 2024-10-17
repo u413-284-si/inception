@@ -12,7 +12,7 @@ error() {
     exit 1
 }
 
-#log "Starting vsftpd setup"
+log "Starting vsftpd for setup"
 service vsftpd start
 
 log "Creating FTP user"
@@ -24,7 +24,7 @@ echo -e "\nlocal_root=/home/$FTP_USER/ftp\n
 # Drop privileges to this user after binding ports and setup
 nopriv_user=$FTP_USER" >> /etc/vsftpd.conf
 
-#log "FTP user setup complete, stopping vsftpd"
+log "FTP user setup complete, stopping vsftpd"
 service vsftpd stop
 
 log "Starting vsftpd in foreground"
