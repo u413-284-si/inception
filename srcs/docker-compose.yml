@@ -139,6 +139,31 @@ services:
       - ./wp-data:/home/slim/ftp/files
     networks:
       - inception
+  
+  cadvisor:
+    build: requirements/bonus/cAdvisor/.
+    image: cadvisor
+    container_name: cadvisor
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      restart_policy:
+        condition: always
+        window: 120s
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro 
+      - /sys:/sys:ro 
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host/root:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - inception
 
 networks:
   inception:
