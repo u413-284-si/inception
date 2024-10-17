@@ -21,6 +21,7 @@ services:
         window: 120s
     volumes:
       - ./wp-data:/var/www/html
+      - ./requirements/bonus/website:/var/www/showcase
     networks:
       - inception
 
