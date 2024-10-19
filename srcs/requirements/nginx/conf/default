@@ -66,12 +66,19 @@ server {
     }
 
     # PHP processing for the Adminer PHP files
-    location ~ ^/adminer/.*\.php$ {
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass adminer:9000;  # Link to the Adminer PHP-FPM container
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param PATH_INFO $uri;  # Send the request path to PHP-FPM
-    }
+    	location ~ ^/adminer/.*\.php$ {
+			# Include the standard FastCGI configuration for PHP
+			include snippets/fastcgi-php.conf;
+			
+			# Pass the request to the Adminer PHP-FPM container running on port 9000
+			fastcgi_pass adminer:9000;
+			
+			# Set the SCRIPT_FILENAME parameter to the root directory and script name
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			
+			# Set the PATH_INFO parameter to the request URI
+			fastcgi_param PATH_INFO $uri;
+		}
 
 
     # Disable directory listing for security
